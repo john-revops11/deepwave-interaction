@@ -151,8 +151,8 @@ const CreationsScene = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 h-full flex flex-col pb-28">
-      <div className={`text-center mb-8 transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+    <div className="container mx-auto px-4 h-full flex flex-col justify-center pb-20 pt-10">
+      <div className={`text-center mb-12 transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
         <div className="inline-flex items-center justify-center mb-4 px-4 py-1 rounded-full glass text-mariana-accent text-sm font-medium transition-all animate-pulse-glow shadow-[0_0_15px_rgba(34,211,238,0.3)]">
           Our Creations
         </div>
@@ -163,12 +163,12 @@ const CreationsScene = () => {
           </span>
         </h2>
         
-        <p className="text-xl text-white/80 text-balance mx-auto max-w-2xl">
+        <p className="text-xl text-white/80 text-balance mx-auto max-w-2xl mb-4">
           Explore our portfolio of cutting-edge work that demonstrates our commitment to excellence and innovation.
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto max-w-7xl">
         {projects.map((project, index) => (
           <ProjectCard 
             key={index}
