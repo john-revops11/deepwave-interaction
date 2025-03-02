@@ -1,15 +1,23 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useScene, type SceneType } from '@/contexts/SceneContext';
-import { X, Send, Bot, User, Maximize, Minimize } from 'lucide-react';
+import { X, Send, Bot, User, Minimize } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Message from './Message';
+import { sendMessageToOpenAI } from '@/services/chatService';
+import { toast } from 'sonner';
 
 interface ChatMessage {
   id: string;
   text: string;
   sender: 'user' | 'bot';
   timestamp: Date;
+}
+
+// For OpenAI API format
+interface OpenAIMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
 }
 
 const INITIAL_MESSAGES: ChatMessage[] = [
@@ -34,6 +42,9 @@ const Chat = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [conversationHistory, setConversationHistory] = useState<OpenAIMessage[]>([
+    { role: 'assistant', content: INITIAL_MESSAGES[0].text }
+  ]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
@@ -47,33 +58,10 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  const getResponse = (text: string): [string, SceneType | undefined] => {
-    // Simple response logic based on keywords
-    const lowerText = text.toLowerCase();
-    
-    if (lowerText.includes('vision') || lowerText.includes('about') || lowerText.includes('company')) {
-      return ["Mariana Deep Intelligence is pioneering the future of AI-driven web experiences. We specialize in creating immersive, intelligent websites that engage users in unprecedented ways.", 'vision'];
-    } 
-    else if (lowerText.includes('solution') || lowerText.includes('service') || lowerText.includes('offer')) {
-      return ["We offer three core services: AI Website Development, AI Agent Automations, and Automated Marketing solutions. Each is designed to transform how businesses connect with their audiences.", 'solutions'];
-    }
-    else if (lowerText.includes('work') || lowerText.includes('portfolio') || lowerText.includes('project') || lowerText.includes('creation')) {
-      return ["Our portfolio showcases innovative AI-driven websites and applications that we've built for forward-thinking clients across various industries.", 'creations'];
-    }
-    else if (lowerText.includes('contact') || lowerText.includes('connect') || lowerText.includes('talk') || lowerText.includes('build')) {
-      return ["I'd be happy to connect you with our team! Let me show you our contact options.", 'contact'];
-    }
-    else if (lowerText.includes('login') || lowerText.includes('dashboard') || lowerText.includes('account')) {
-      return ["You can access your client dashboard to view project updates and analytics.", 'dashboard'];
-    }
-    
-    return ["I'm here to guide you through our services and capabilities. Feel free to ask about our vision, solutions, past work, or how to get in touch with our team.", undefined];
-  };
-
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
-    // Add user message
+    // Add user message to UI
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       text: inputText,
@@ -81,28 +69,50 @@ const Chat = () => {
       timestamp: new Date(),
     };
     setMessages(prev => [...prev, userMessage]);
+    
+    // Add user message to conversation history
+    const userOpenAIMessage: OpenAIMessage = {
+      role: 'user',
+      content: inputText
+    };
+    setConversationHistory(prev => [...prev, userOpenAIMessage]);
+    
     setInputText('');
     setIsTyping(true);
 
-    // Simulate AI response after a delay
-    setTimeout(() => {
-      const [responseText, sceneToChangeTo] = getResponse(inputText);
+    try {
+      // Call OpenAI API
+      const [responseText, suggestedScene] = await sendMessageToOpenAI(
+        inputText, 
+        conversationHistory
+      );
       
+      // Add bot message to UI
       const botMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         text: responseText,
         sender: 'bot',
         timestamp: new Date(),
       };
-      
       setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
+      
+      // Add assistant message to conversation history
+      const botOpenAIMessage: OpenAIMessage = {
+        role: 'assistant',
+        content: responseText
+      };
+      setConversationHistory(prev => [...prev, botOpenAIMessage]);
       
       // Change scene if applicable
-      if (sceneToChangeTo) {
-        setTimeout(() => changeScene(sceneToChangeTo), 1000);
+      if (suggestedScene) {
+        setTimeout(() => changeScene(suggestedScene), 1000);
       }
-    }, 1500);
+    } catch (error) {
+      console.error("Error sending message to OpenAI:", error);
+      toast.error("Failed to get a response from the AI. Please try again.");
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
