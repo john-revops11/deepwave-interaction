@@ -1,6 +1,7 @@
 
 import { Bot, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useMobile } from '@/hooks/use-mobile';
 
 interface MessageProps {
   message: {
@@ -14,6 +15,7 @@ interface MessageProps {
 const Message = ({ message }: MessageProps) => {
   const isBot = message.sender === 'bot';
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useMobile();
 
   // Animation on mount
   useEffect(() => {
@@ -27,7 +29,7 @@ const Message = ({ message }: MessageProps) => {
     <div 
       className={`flex items-start gap-3 mb-4 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'} ${isBot ? '' : 'flex-row-reverse'}`}
     >
-      <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
+      <div className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full ${
         isBot 
           ? 'bg-mariana-accent' 
           : 'bg-white/20'
@@ -42,7 +44,7 @@ const Message = ({ message }: MessageProps) => {
           ? 'glass rounded-lg rounded-tl-none max-w-[80%] hover:bg-white/10' 
           : 'bg-mariana-accent/90 text-mariana-deep rounded-lg rounded-tr-none max-w-[80%] ml-auto hover:bg-mariana-accent'
       }`}>
-        <p className="text-sm font-medium">{message.text}</p>
+        <p className={`${isMobile ? 'text-sm' : 'text-sm'} font-medium break-words`}>{message.text}</p>
         <div className={`text-[10px] mt-1 ${isBot ? 'text-gray-400' : 'text-mariana-deep/70'}`}>
           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>

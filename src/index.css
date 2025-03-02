@@ -99,4 +99,31 @@
     @apply opacity-0 -z-10;
     transform: translateX(100%);
   }
+  
+  /* Mobile-specific utilities */
+  @media (max-width: 640px) {
+    .mobile-nav {
+      @apply fixed top-0 left-0 right-0 z-50;
+    }
+    
+    .mobile-nav-padding {
+      @apply pt-16;
+    }
+    
+    .mobile-scene-container {
+      @apply px-4 py-20 overflow-y-auto;
+    }
+  }
+}
+
+/* Add responsive adjustment for WelcomeScene */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
 }

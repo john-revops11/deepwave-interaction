@@ -7,10 +7,12 @@ import SolutionsScene from '@/components/scenes/SolutionsScene';
 import CreationsScene from '@/components/scenes/CreationsScene';
 import ContactScene from '@/components/scenes/ContactScene';
 import DashboardScene from '@/components/scenes/DashboardScene';
+import { useMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
   const { currentScene, toggleChat, setChatPosition } = useScene();
   const [showChat, setShowChat] = useState(false);
+  const isMobile = useMobile();
 
   useEffect(() => {
     // Automatically show the chat after a short delay when the page loads
@@ -20,7 +22,7 @@ const Index = () => {
       
       // Make sure the chat starts in the center position on the welcome screen
       if (currentScene === 'welcome') {
-        setChatPosition('center');
+        setChatPosition(isMobile ? 'bottom-right' : 'center');
       }
     }, 800);
 

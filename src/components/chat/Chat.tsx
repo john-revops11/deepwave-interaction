@@ -7,7 +7,7 @@ import Message from './Message';
 import { sendMessageToOpenAI } from '@/services/chatService';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { useMobile } from '@/hooks/use-mobile';
 
 interface ChatMessage {
   id: string;
@@ -49,6 +49,7 @@ const Chat = () => {
     { role: 'assistant', content: INITIAL_MESSAGES[0].text }
   ]);
   const [hovered, setHovered] = useState(false);
+  const isMobile = useMobile();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
@@ -161,13 +162,18 @@ const Chat = () => {
   };
 
   const chatContainerClasses = () => {
+    if (chatPosition === 'minimized') {
+      return "";
+    }
+    
+    if (isMobile) {
+      return "fixed inset-0 z-50 glass-dark flex flex-col animate-scale-in";
+    }
+    
     switch (chatPosition) {
       case 'center':
         return "fixed inset-0 m-auto w-[90%] max-w-4xl h-[70vh] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in z-50 transition-all duration-300";
       case 'bottom-right':
-        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in transition-all duration-300";
-      case 'minimized':
-        return "fixed right-8 bottom-8 z-50 animate-scale-in";
       default:
         return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in transition-all duration-300";
     }
@@ -179,7 +185,7 @@ const Chat = () => {
         onClick={toggleChatPosition}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`fixed right-8 bottom-8 z-50 w-14 h-14 rounded-full bg-mariana-accent text-mariana-deep shadow-lg transition-all duration-300 ${
+        className={`fixed ${isMobile ? 'right-4 bottom-6' : 'right-8 bottom-8'} z-50 w-14 h-14 rounded-full bg-mariana-accent text-mariana-deep shadow-lg transition-all duration-300 ${
           hovered ? 'scale-110 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'opacity-90'
         }`}
       >
