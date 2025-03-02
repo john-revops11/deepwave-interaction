@@ -152,97 +152,98 @@ const GenericPortfolioDetail = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 py-8 h-full flex flex-col">
       <Button 
         variant="ghost" 
         onClick={() => navigate(-1)} 
-        className="mb-8 text-white hover:text-mariana-accent"
+        className="mb-6 text-white hover:text-mariana-accent self-start"
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back
       </Button>
 
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-6">{portfolioItem.title}</h1>
-        
-        <div className="flex flex-wrap gap-2 mb-8">
-          {portfolioItem.technologies.map((tech, index) => (
-            <span key={index} className="text-sm px-3 py-1 rounded-full bg-mariana-accent/20 text-mariana-accent">
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        <div className="aspect-[16/9] overflow-hidden rounded-xl mb-8">
-          <img 
-            src={portfolioItem.image}
-            alt={portfolioItem.title} 
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <div className="glass p-8 rounded-xl mb-10">
-          <h2 className="text-2xl font-semibold text-white mb-4">Project Overview</h2>
-          <p className="text-white/80 mb-6">
-            {portfolioItem.description}
-          </p>
-
-          <h2 className="text-2xl font-semibold text-white mb-4">Key Features</h2>
-          <ul className="space-y-3 mb-6">
-            {portfolioItem.features.map((feature, index) => (
-              <li key={index} className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-mariana-accent mt-2.5"></div>
-                <span className="text-white/80">{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="glass p-8 rounded-xl mb-10">
-          <h2 className="text-2xl font-semibold text-white mb-4">Technical Approach</h2>
-          <p className="text-white/80 mb-4">
-            We developed {portfolioItem.title} using innovative technologies to ensure optimal performance:
-          </p>
-          <ul className="space-y-3 mb-6">
-            {portfolioItem.technical.map((tech, index) => (
-              <li key={index} className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-mariana-accent mt-2.5"></div>
-                <span className="text-white/80">{tech}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="glass p-8 rounded-xl mb-10">
-          <h2 className="text-2xl font-semibold text-white mb-4">Results</h2>
-          <p className="text-white/80 mb-4">
-            {portfolioItem.title} has delivered significant value:
-          </p>
-          <ul className="space-y-3 mb-6">
-            {portfolioItem.results.map((result, index) => (
-              <li key={index} className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-mariana-accent mt-2.5"></div>
-                <span className="text-white/80">{result}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Button 
-            className="bg-white hover:bg-white/90 text-gray-900 px-6 py-6 h-auto text-lg font-medium rounded-xl transition-all flex items-center gap-2"
-          >
-            <ExternalLink className="h-5 w-5" />
-            View Live Project
-          </Button>
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[calc(100vh-10rem)] overflow-hidden">
+        {/* Left Column - Image and Tech Stack */}
+        <div className="flex flex-col gap-6 overflow-y-auto pr-2 scrollbar-hide">
+          <h1 className="text-2xl md:text-3xl font-bold text-white">{portfolioItem.title}</h1>
           
-          <Button 
-            variant="outline"
-            className="border-white/20 hover:bg-white/10 text-white px-6 py-6 h-auto text-lg font-medium rounded-xl transition-all flex items-center gap-2"
-          >
-            <Github className="h-5 w-5" />
-            View Source Code
-          </Button>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {portfolioItem.technologies.map((tech, index) => (
+              <span key={index} className="text-sm px-3 py-1 rounded-full bg-mariana-accent/20 text-mariana-accent">
+                {tech}
+              </span>
+            ))}
+          </div>
+          
+          <div className="rounded-xl overflow-hidden h-80 md:h-96 w-full">
+            <img 
+              src={portfolioItem.image}
+              alt={portfolioItem.title} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div className="glass p-6 rounded-xl">
+            <h2 className="text-xl font-semibold text-white mb-3">Technical Approach</h2>
+            <p className="text-white/80 mb-3">
+              We developed {portfolioItem.title} using innovative technologies to ensure optimal performance:
+            </p>
+            <ul className="space-y-2">
+              {portfolioItem.technical.slice(0, 4).map((tech, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-mariana-accent mt-2"></div>
+                  <span className="text-white/80">{tech}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Right Column - Overview and CTA */}
+        <div className="flex flex-col gap-6 overflow-y-auto pr-2 scrollbar-hide">
+          <div className="glass p-6 rounded-xl">
+            <h2 className="text-xl font-semibold text-white mb-3">Project Overview</h2>
+            <p className="text-white/80 mb-4">
+              {portfolioItem.description}
+            </p>
+
+            <h2 className="text-xl font-semibold text-white mb-3 mt-5">Key Features</h2>
+            <ul className="space-y-2 mb-4">
+              {portfolioItem.features.slice(0, 4).map((feature, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-mariana-accent mt-2"></div>
+                  <span className="text-white/80">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <h2 className="text-xl font-semibold text-white mb-3 mt-5">Results</h2>
+            <ul className="space-y-2">
+              {portfolioItem.results.slice(0, 4).map((result, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-mariana-accent mt-2"></div>
+                  <span className="text-white/80">{result}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-wrap gap-4 justify-center mt-auto">
+            <Button 
+              className="bg-white hover:bg-white/90 text-gray-900 px-5 py-3 h-auto font-medium rounded-xl transition-all flex items-center gap-2"
+            >
+              <ExternalLink className="h-5 w-5" />
+              View Live Project
+            </Button>
+            
+            <Button 
+              variant="outline"
+              className="border-white/20 hover:bg-white/10 text-white px-5 py-3 h-auto font-medium rounded-xl transition-all flex items-center gap-2"
+            >
+              <Github className="h-5 w-5" />
+              View Source Code
+            </Button>
+          </div>
         </div>
       </div>
     </div>
