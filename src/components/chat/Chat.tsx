@@ -190,40 +190,60 @@ const Chat = () => {
       <div
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        onClick={toggleChatPosition}
         className={`fixed ${
           isMobile 
-            ? 'left-[8.33%] right-[8.33%] bottom-6 w-5/6' 
-            : 'left-1/4 right-1/4 bottom-8 w-1/2'
-        } z-50 h-[10vh] min-h-[60px] glass-dark rounded-xl overflow-hidden shadow-lg transition-all duration-300 cursor-pointer ${
+            ? 'left-[5%] right-[5%] bottom-6 w-[90%]' 
+            : 'left-[15%] right-[15%] bottom-8 w-[70%]'
+        } z-50 glass-dark rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${
           hovered ? 'shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'opacity-90'
         }`}
       >
-        <div className="flex items-center justify-between h-full px-6">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center h-full">
+          <div 
+            className="flex items-center gap-3 pl-4 py-2 cursor-pointer" 
+            onClick={toggleChatPosition}
+          >
             <div className="flex items-center justify-center w-10 h-10 bg-mariana-accent rounded-full">
               <Bot className="w-6 h-6 text-mariana-deep" />
             </div>
-            <div>
+            <div className="hidden sm:block">
               <h3 className="font-semibold text-white">Mariana AI</h3>
               <p className="text-xs text-mariana-accent">AI Concierge</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <p className="hidden md:block text-white/80 text-sm">Click to chat with Mariana</p>
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="h-10 w-10 text-mariana-accent hover:text-white hover:bg-white/10 transition-colors duration-200"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleChatPosition();
+          <div className="flex-1 px-2 md:px-4">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendMessage();
               }}
+              className="flex items-center gap-2"
             >
-              <Maximize className="h-5 w-5" />
-            </Button>
+              <Input
+                value={inputText}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask Mariana something..."
+                className="flex-1 bg-white/10 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-mariana-accent/50 text-white placeholder:text-white/50 transition-all duration-200"
+              />
+              <Button 
+                type="submit"
+                className="bg-mariana-accent hover:bg-mariana-accent/80 text-mariana-deep transition-all duration-200 hover:shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
           </div>
+          
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="h-10 w-10 text-mariana-accent hover:text-white hover:bg-white/10 transition-colors duration-200 mr-2"
+            onClick={toggleChatPosition}
+          >
+            <Maximize className="h-5 w-5" />
+          </Button>
         </div>
       </div>
     );
