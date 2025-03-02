@@ -16,7 +16,7 @@ const AppLayout = () => {
       
       <div className="relative z-10 h-full w-full">
         <Navigation />
-        <div className={`${isMobile ? 'pt-20' : ''} h-full w-full`}>
+        <div className={`${isMobile ? 'pt-20 pb-16' : 'pb-[12vh]'} h-full w-full`}>
           <Outlet />
         </div>
         {chatOpen && <Chat />}
