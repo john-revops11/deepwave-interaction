@@ -20,11 +20,11 @@ const Index = () => {
       setShowChat(true);
       toggleChat();
       
-      // Make sure the chat starts in the correct position based on screen size
+      // Set initial chat position to center if on welcome page, minimized otherwise
       if (currentScene === 'welcome') {
         setChatPosition(isMobile ? 'minimized' : 'center');
       } else {
-        setChatPosition(isMobile ? 'minimized' : 'bottom-right');
+        setChatPosition('minimized');
       }
     }, 800);
 

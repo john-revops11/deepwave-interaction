@@ -151,7 +151,7 @@ const Chat = () => {
 
   const toggleChatPosition = () => {
     if (chatPosition === 'minimized') {
-      setChatPosition(currentScene === 'welcome' ? 'center' : 'bottom-right');
+      setChatPosition('center');
     } else {
       setChatPosition('minimized');
     }
@@ -166,13 +166,7 @@ const Chat = () => {
       return "fixed inset-0 z-50 glass-dark flex flex-col animate-scale-in";
     }
     
-    switch (chatPosition) {
-      case 'center':
-        return "fixed inset-0 m-auto w-[90%] max-w-4xl h-[70vh] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in z-50 transition-all duration-300";
-      case 'bottom-right':
-      default:
-        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in transition-all duration-300";
-    }
+    return "fixed inset-0 m-auto w-[90%] max-w-4xl h-[70vh] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in z-50 transition-all duration-300";
   };
 
   if (chatPosition === 'minimized') {

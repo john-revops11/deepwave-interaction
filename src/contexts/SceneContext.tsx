@@ -34,14 +34,15 @@ export const SceneProvider = ({ children }: SceneProviderProps) => {
 
   const changeScene = (scene: SceneType) => {
     setCurrentScene(scene);
-    // Only adjust chat position if it's currently open and not minimized
-    if (chatOpen && chatPosition !== 'minimized') {
-      // Adjust chat position based on scene
-      if (scene === 'welcome') {
-        setChatPosition('center');
-      } else {
-        setChatPosition('bottom-right');
-      }
+    
+    // If moving away from welcome page, minimize the chat if it's open
+    if (scene !== 'welcome' && chatOpen && chatPosition !== 'minimized') {
+      setChatPosition('minimized');
+    }
+    
+    // If returning to welcome page and chat is minimized but open, center it
+    if (scene === 'welcome' && chatOpen && chatPosition === 'minimized') {
+      setChatPosition('center');
     }
   };
 
@@ -49,10 +50,14 @@ export const SceneProvider = ({ children }: SceneProviderProps) => {
     const newChatOpen = !chatOpen;
     setChatOpen(newChatOpen);
     
-    // If opening the chat and it was previously minimized,
-    // set the appropriate position based on current scene
-    if (newChatOpen && chatPosition === 'minimized') {
-      setChatPosition(currentScene === 'welcome' ? 'center' : 'bottom-right');
+    // If opening the chat, set it to center position regardless of page
+    // unless we're not on the welcome page, then it should be minimized
+    if (newChatOpen) {
+      if (currentScene === 'welcome') {
+        setChatPosition('center');
+      } else {
+        setChatPosition('minimized');
+      }
     }
   };
 
