@@ -9,6 +9,16 @@ import { SceneProvider } from "./contexts/SceneContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
+// Service Detail Pages
+import AiWebsiteDetail from "./pages/ServiceDetail/AiWebsiteDetail";
+import AiAgentDetail from "./pages/ServiceDetail/AiAgentDetail";
+import AutoMarketingDetail from "./pages/ServiceDetail/AutoMarketingDetail";
+
+// Portfolio Detail Pages
+import NovaAiDetail from "./pages/PortfolioDetail/NovaAiDetail";
+import QuantumAnalyticsDetail from "./pages/PortfolioDetail/QuantumAnalyticsDetail";
+import GenericPortfolioDetail from "./pages/PortfolioDetail/GenericPortfolioDetail";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -21,6 +31,16 @@ const App = () => (
           <Routes>
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Index />} />
+              
+              {/* Service Detail Routes */}
+              <Route path="services/ai-website" element={<AiWebsiteDetail />} />
+              <Route path="services/ai-agent" element={<AiAgentDetail />} />
+              <Route path="services/auto-marketing" element={<AutoMarketingDetail />} />
+              
+              {/* Portfolio Detail Routes */}
+              <Route path="portfolio/nova-ai" element={<NovaAiDetail />} />
+              <Route path="portfolio/quantum-analytics" element={<QuantumAnalyticsDetail />} />
+              <Route path="portfolio/:id" element={<GenericPortfolioDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
