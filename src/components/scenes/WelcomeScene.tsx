@@ -52,16 +52,6 @@ const WelcomeScene = () => {
           </Button>
         </div>
       </div>
-      
-      {!isMobile && (
-        <div className={`absolute bottom-8 left-8 transition-all duration-1000 delay-500 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-          <div className="glass rounded-lg p-4 max-w-xs">
-            <p className="text-sm text-white/70">
-              "AI as Deep as Innovation."
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
