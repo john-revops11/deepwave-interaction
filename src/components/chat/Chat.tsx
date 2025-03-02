@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useScene, type SceneType } from '@/contexts/SceneContext';
 import { X, Send, Bot, User, Minimize } from 'lucide-react';
@@ -14,7 +13,6 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-// For OpenAI API format
 interface OpenAIMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -61,7 +59,6 @@ const Chat = () => {
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
-    // Add user message to UI
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       text: inputText,
@@ -70,7 +67,6 @@ const Chat = () => {
     };
     setMessages(prev => [...prev, userMessage]);
     
-    // Add user message to conversation history
     const userOpenAIMessage: OpenAIMessage = {
       role: 'user',
       content: inputText
@@ -81,13 +77,11 @@ const Chat = () => {
     setIsTyping(true);
 
     try {
-      // Call OpenAI API
       const [responseText, suggestedScene] = await sendMessageToOpenAI(
         inputText, 
         conversationHistory
       );
       
-      // Add bot message to UI
       const botMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         text: responseText,
@@ -96,16 +90,18 @@ const Chat = () => {
       };
       setMessages(prev => [...prev, botMessage]);
       
-      // Add assistant message to conversation history
       const botOpenAIMessage: OpenAIMessage = {
         role: 'assistant',
         content: responseText
       };
       setConversationHistory(prev => [...prev, botOpenAIMessage]);
       
-      // Change scene if applicable
       if (suggestedScene) {
-        setTimeout(() => changeScene(suggestedScene), 1000);
+        console.log(`Navigation suggested to: ${suggestedScene}`);
+        setTimeout(() => {
+          toast.info(`Navigating to ${suggestedScene} page...`, { duration: 2000 });
+          changeScene(suggestedScene);
+        }, 1500);
       }
     } catch (error) {
       console.error("Error sending message to OpenAI:", error);
@@ -136,7 +132,6 @@ const Chat = () => {
     }
   };
 
-  // Determine the correct CSS classes based on chat position
   const chatContainerClasses = () => {
     switch (chatPosition) {
       case 'center':
@@ -150,7 +145,6 @@ const Chat = () => {
     }
   };
 
-  // If minimized, just show the avatar button
   if (chatPosition === 'minimized') {
     return (
       <Button
@@ -165,7 +159,6 @@ const Chat = () => {
   return (
     <div className={chatContainerClasses()}>
       <div className="flex flex-col h-full">
-        {/* Chat header */}
         <div className="flex items-center justify-between p-4 bg-mariana-light border-b border-white/10">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full">
@@ -196,7 +189,6 @@ const Chat = () => {
           </div>
         </div>
         
-        {/* Messages area */}
         <div className="flex-1 p-4 overflow-y-auto scrollbar-hide">
           {messages.map((message) => (
             <Message key={message.id} message={message} />
@@ -218,7 +210,6 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Quick prompts */}
         <div className="px-4 py-2 flex flex-wrap gap-2 border-t border-white/10 bg-mariana-deep/50">
           {QUICK_PROMPTS.map((prompt, index) => (
             <button
@@ -231,7 +222,6 @@ const Chat = () => {
           ))}
         </div>
         
-        {/* Input area */}
         <div className="p-4 border-t border-white/10 bg-mariana-deep/80">
           <div className="flex gap-2">
             <input

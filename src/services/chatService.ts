@@ -32,16 +32,16 @@ export async function sendMessageToOpenAI(
         - 'contact' (Contact Us): How to get in touch with our team
         - 'dashboard' (Client Dashboard): For existing clients to log in
         
-        When a user expresses interest in any of these topics, suggest navigating to the appropriate page. For example:
-        - If they ask about company vision/about us/who we are, suggest the 'vision' page
-        - If they ask about services/solutions/what we offer, suggest the 'solutions' page
-        - If they ask about work/portfolio/projects/examples, suggest the 'creations' page
-        - If they want to contact/connect/get in touch, suggest the 'contact' page
-        - If they want to login/dashboard/account, suggest the 'dashboard' page
+        IMPORTANT: When you detect that the user is asking to SEE, VIEW, or NAVIGATE to any of these sections:
+        - If they ask to see our company, mission, vision, about us, or who we are: ALWAYS include the exact phrase "Vision page" in your response
+        - If they ask about services, solutions, offerings, what we do: ALWAYS include the exact phrase "Solutions page" in your response
+        - If they ask about work, portfolio, projects, examples: ALWAYS include the exact phrase "Creations page" in your response
+        - If they want to contact, connect, get in touch: ALWAYS include the exact phrase "Contact page" in your response
+        - If they want to login, dashboard, account: ALWAYS include the exact phrase "Dashboard page" in your response
         
-        Don't force navigation suggestions if they're just asking general questions. Only suggest navigation when it's clearly relevant to their query.
+        Be proactive about suggesting navigation. If the user's query is related to any of these topics, suggest the relevant page by including the page name explicitly in your response, like "Would you like to see our Solutions page?" or "I can show you our Creations page if you'd like to see examples of our work."
         
-        Important: When suggesting navigation, mention the page name explicitly in your response, like "Would you like to see our Solutions page?" or "I can show you our Creations page if you'd like to see examples of our work."
+        If a user explicitly asks to "show", "see", "view", or "go to" any of these pages, make sure to include the exact page name in your response to trigger automatic navigation.
         
         Your role is to be the digital face of Mariana Deep Intelligence - knowledgeable, helpful, and guiding users through their journey on our website.`
       },
@@ -78,17 +78,35 @@ export async function sendMessageToOpenAI(
     
     const lowerResponse = responseText.toLowerCase();
     
-    if (lowerResponse.includes('vision page') || lowerResponse.includes('about us page') || lowerResponse.includes('about page')) {
+    // Enhanced keyword detection for better navigation suggestions
+    if (lowerResponse.includes('vision page') || 
+        lowerResponse.includes('about us page') || 
+        lowerResponse.includes('about page') ||
+        (lowerResponse.includes('vision') && (lowerResponse.includes('see') || lowerResponse.includes('show') || lowerResponse.includes('view') || lowerResponse.includes('go to')))) {
       suggestedScene = 'vision';
-    } else if (lowerResponse.includes('solutions page') || lowerResponse.includes('services page')) {
+    } else if (lowerResponse.includes('solutions page') || 
+               lowerResponse.includes('services page') ||
+               (lowerResponse.includes('solutions') && (lowerResponse.includes('see') || lowerResponse.includes('show') || lowerResponse.includes('view') || lowerResponse.includes('go to')))) {
       suggestedScene = 'solutions';
-    } else if (lowerResponse.includes('creations page') || lowerResponse.includes('portfolio page') || lowerResponse.includes('work page') || lowerResponse.includes('projects page')) {
+    } else if (lowerResponse.includes('creations page') || 
+               lowerResponse.includes('portfolio page') || 
+               lowerResponse.includes('work page') || 
+               lowerResponse.includes('projects page') ||
+               (lowerResponse.includes('creations') && (lowerResponse.includes('see') || lowerResponse.includes('show') || lowerResponse.includes('view') || lowerResponse.includes('go to')))) {
       suggestedScene = 'creations';
-    } else if (lowerResponse.includes('contact page') || lowerResponse.includes('get in touch')) {
+    } else if (lowerResponse.includes('contact page') || 
+               lowerResponse.includes('get in touch') ||
+               (lowerResponse.includes('contact') && (lowerResponse.includes('see') || lowerResponse.includes('show') || lowerResponse.includes('view') || lowerResponse.includes('go to')))) {
       suggestedScene = 'contact';
-    } else if (lowerResponse.includes('dashboard page') || lowerResponse.includes('login page') || lowerResponse.includes('account page')) {
+    } else if (lowerResponse.includes('dashboard page') || 
+               lowerResponse.includes('login page') || 
+               lowerResponse.includes('account page') ||
+               (lowerResponse.includes('dashboard') && (lowerResponse.includes('see') || lowerResponse.includes('show') || lowerResponse.includes('view') || lowerResponse.includes('go to')))) {
       suggestedScene = 'dashboard';
     }
+
+    console.log('AI Response:', responseText);
+    console.log('Suggested Scene:', suggestedScene);
 
     return [responseText, suggestedScene];
   } catch (error) {
