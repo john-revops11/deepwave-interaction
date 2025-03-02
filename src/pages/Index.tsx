@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useScene } from '@/contexts/SceneContext';
 import WelcomeScene from '@/components/scenes/WelcomeScene';
@@ -17,12 +16,17 @@ const Index = () => {
   useEffect(() => {
     // Set initial chat position
     const timer = setTimeout(() => {
-      // Always start with chat minimized
-      setChatPosition('minimized');
+      // On welcome scene, open the chat in center position
+      if (currentScene === 'welcome') {
+        setChatPosition('center');
+      } else {
+        // On other scenes, keep it minimized
+        setChatPosition('minimized');
+      }
     }, 800);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [currentScene]);
 
   return (
     <main className="relative h-full w-full overflow-hidden">

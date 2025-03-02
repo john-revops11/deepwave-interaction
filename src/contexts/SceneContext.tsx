@@ -35,8 +35,12 @@ export const SceneProvider = ({ children }: SceneProviderProps) => {
   const changeScene = (scene: SceneType) => {
     setCurrentScene(scene);
     
-    // If moving away from welcome page, minimize the chat if it's open
-    if (scene !== 'welcome' && chatOpen && chatPosition !== 'minimized') {
+    // If moving to welcome page, show the chat
+    if (scene === 'welcome') {
+      setChatPosition('center');
+    } 
+    // If moving away from welcome page, minimize the chat
+    else if (chatPosition !== 'minimized') {
       setChatPosition('minimized');
     }
   };
