@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useScene } from '@/contexts/SceneContext';
 import WelcomeScene from '@/components/scenes/WelcomeScene';
 import VisionScene from '@/components/scenes/VisionScene';
@@ -9,7 +9,18 @@ import ContactScene from '@/components/scenes/ContactScene';
 import DashboardScene from '@/components/scenes/DashboardScene';
 
 const Index = () => {
-  const { currentScene } = useScene();
+  const { currentScene, toggleChat } = useScene();
+  const [showChat, setShowChat] = useState(false);
+
+  useEffect(() => {
+    // Automatically show the chat after a delay when the page loads
+    const timer = setTimeout(() => {
+      setShowChat(true);
+      toggleChat();
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <main className="relative h-full w-full overflow-hidden">

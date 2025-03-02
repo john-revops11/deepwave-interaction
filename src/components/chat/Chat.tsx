@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useScene, type SceneType } from '@/contexts/SceneContext';
-import { Bot, Send } from 'lucide-react';
+import { X, Send, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Message from './Message';
 
@@ -29,11 +29,10 @@ const QUICK_PROMPTS: { text: string; scene?: SceneType }[] = [
 ];
 
 const Chat = () => {
-  const { changeScene } = useScene();
+  const { toggleChat, changeScene } = useScene();
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [expanded, setExpanded] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,109 +118,82 @@ const Chat = () => {
     }, 100);
   };
 
-  const toggleExpanded = () => {
-    setExpanded(prev => !prev);
-  };
-
   return (
-    <div className="fixed bottom-4 right-4 z-50 pointer-events-auto">
-      {/* Minimized avatar that's visible when chat is collapsed */}
-      <div 
-        className={`w-12 h-12 rounded-full bg-mariana-accent flex items-center justify-center cursor-pointer 
-          transition-opacity duration-300 ${expanded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-        onClick={toggleExpanded}
-      >
-        <Bot className="w-6 h-6 text-mariana-deep" />
-      </div>
-
-      {/* Chat Interface (expanded view) */}
-      <div 
-        className={`transition-all duration-500 
-          ${expanded ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'}`}
-      >
-        <div className="w-[350px] h-[450px] glass-dark rounded-xl overflow-hidden shadow-2xl">
-          <div className="flex flex-col h-full relative">
-            {/* Chat header */}
-            <div className="flex items-center justify-between p-3 border-b border-white/10">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full">
-                  <Bot className="w-5 h-5 text-mariana-deep" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Mariana AI</h3>
-                  <p className="text-xs text-mariana-accent">AI Concierge</p>
+    <div className="fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in">
+      <div className="flex flex-col h-full">
+        {/* Chat header */}
+        <div className="flex items-center justify-between p-4 bg-mariana-light border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full">
+              <Bot className="w-5 h-5 text-mariana-deep" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white">Mariana AI</h3>
+              <p className="text-xs text-mariana-accent">AI Concierge</p>
+            </div>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={toggleChat}
+            className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        {/* Messages area */}
+        <div className="flex-1 p-4 overflow-y-auto scrollbar-hide">
+          {messages.map((message) => (
+            <Message key={message.id} message={message} />
+          ))}
+          {isTyping && (
+            <div className="flex items-start gap-3 mb-4 animate-pulse">
+              <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full">
+                <Bot className="w-5 h-5 text-mariana-deep" />
+              </div>
+              <div className="px-4 py-2 glass rounded-lg rounded-tl-none max-w-[80%]">
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
+                  <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
+                  <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
                 </div>
               </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10"
-                onClick={toggleExpanded}
-              >
-                <span className="sr-only">Minimize</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="4 14 10 14 10 20"></polyline>
-                  <polyline points="20 10 14 10 14 4"></polyline>
-                  <line x1="14" y1="10" x2="21" y2="3"></line>
-                  <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
-              </Button>
             </div>
-            
-            {/* Messages area */}
-            <div className="flex-1 p-4 overflow-y-auto scrollbar-hide">
-              {messages.map((message) => (
-                <Message key={message.id} message={message} />
-              ))}
-              {isTyping && (
-                <div className="flex items-start gap-3 mb-4 animate-pulse">
-                  <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full">
-                    <Bot className="w-5 h-5 text-mariana-deep" />
-                  </div>
-                  <div className="px-4 py-2 glass rounded-lg rounded-tl-none max-w-[80%]">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
-                      <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
-                      <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
 
-            {/* Quick prompts */}
-            <div className="px-4 py-2 flex flex-wrap gap-2 border-t border-white/10 bg-mariana-deep/50">
-              {QUICK_PROMPTS.map((prompt, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuickPrompt(prompt)}
-                  className="px-3 py-1 text-xs glass hover-glow rounded-full transition-all duration-300 text-mariana-accent"
-                >
-                  {prompt.text}
-                </button>
-              ))}
-            </div>
-            
-            {/* Input area */}
-            <div className="p-3 border-t border-white/10 bg-mariana-deep/80">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={inputText}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Type a message..."
-                  className="flex-1 bg-white/10 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-mariana-accent/50 text-white"
-                />
-                <Button 
-                  onClick={handleSendMessage}
-                  className="bg-mariana-accent hover:bg-mariana-accent/80 text-mariana-deep"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+        {/* Quick prompts */}
+        <div className="px-4 py-2 flex flex-wrap gap-2 border-t border-white/10 bg-mariana-deep/50">
+          {QUICK_PROMPTS.map((prompt, index) => (
+            <button
+              key={index}
+              onClick={() => handleQuickPrompt(prompt)}
+              className="px-3 py-1 text-xs glass hover-glow rounded-full transition-all duration-300 text-mariana-accent"
+            >
+              {prompt.text}
+            </button>
+          ))}
+        </div>
+        
+        {/* Input area */}
+        <div className="p-4 border-t border-white/10 bg-mariana-deep/80">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={inputText}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Type a message..."
+              className="flex-1 bg-white/10 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-mariana-accent/50 text-white"
+            />
+            <Button 
+              onClick={handleSendMessage}
+              className="bg-mariana-accent hover:bg-mariana-accent/80 text-mariana-deep"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>

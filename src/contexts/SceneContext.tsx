@@ -26,7 +26,7 @@ interface SceneProviderProps {
 
 export const SceneProvider = ({ children }: SceneProviderProps) => {
   const [currentScene, setCurrentScene] = useState<SceneType>('welcome');
-  const [chatOpen, setChatOpen] = useState(true); // Set chat to be open by default
+  const [chatOpen, setChatOpen] = useState(false);
 
   const changeScene = (scene: SceneType) => {
     setCurrentScene(scene);
