@@ -9,15 +9,20 @@ import ContactScene from '@/components/scenes/ContactScene';
 import DashboardScene from '@/components/scenes/DashboardScene';
 
 const Index = () => {
-  const { currentScene, toggleChat } = useScene();
+  const { currentScene, toggleChat, setChatPosition } = useScene();
   const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
-    // Automatically show the chat after a delay when the page loads
+    // Automatically show the chat after a short delay when the page loads
     const timer = setTimeout(() => {
       setShowChat(true);
       toggleChat();
-    }, 1000);
+      
+      // Make sure the chat starts in the center position on the welcome screen
+      if (currentScene === 'welcome') {
+        setChatPosition('center');
+      }
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
