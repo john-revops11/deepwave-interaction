@@ -185,12 +185,11 @@ const Chat = () => {
         onClick={toggleChatPosition}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`fixed ${isMobile ? 'bottom-6 right-4 w-5/6 h-12' : 'bottom-8 right-8 w-1/2 h-[10vh]'} z-50 rounded-full bg-mariana-accent text-mariana-deep shadow-lg transition-all duration-300 flex items-center justify-start px-4 ${
-          hovered ? 'scale-[1.02] shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'opacity-90'
+        className={`fixed ${isMobile ? 'right-4 bottom-6' : 'right-8 bottom-8'} z-50 w-14 h-14 rounded-full bg-mariana-accent text-mariana-deep shadow-lg transition-all duration-300 ${
+          hovered ? 'scale-110 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'opacity-90'
         }`}
       >
-        <Bot className={`w-6 h-6 mr-3 transition-transform duration-300 ${hovered ? 'scale-110' : ''}`} />
-        <span className="text-mariana-deep font-medium">Chat with Mariana AI</span>
+        <Bot className={`w-6 h-6 transition-transform duration-300 ${hovered ? 'scale-110' : ''}`} />
       </Button>
     );
   }
