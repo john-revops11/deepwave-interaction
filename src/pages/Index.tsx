@@ -1,13 +1,53 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useEffect, useState } from 'react';
+import { useScene } from '@/contexts/SceneContext';
+import WelcomeScene from '@/components/scenes/WelcomeScene';
+import VisionScene from '@/components/scenes/VisionScene';
+import SolutionsScene from '@/components/scenes/SolutionsScene';
+import CreationsScene from '@/components/scenes/CreationsScene';
+import ContactScene from '@/components/scenes/ContactScene';
+import DashboardScene from '@/components/scenes/DashboardScene';
 
 const Index = () => {
+  const { currentScene, toggleChat } = useScene();
+  const [showChat, setShowChat] = useState(false);
+
+  useEffect(() => {
+    // Automatically show the chat after a delay when the page loads
+    const timer = setTimeout(() => {
+      setShowChat(true);
+      toggleChat();
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <main className="relative h-full w-full overflow-hidden">
+      <div className={`scene-container ${currentScene === 'welcome' ? 'scene-active' : currentScene === 'dashboard' ? 'scene-before' : 'scene-after'}`}>
+        <WelcomeScene />
       </div>
-    </div>
+      
+      <div className={`scene-container ${currentScene === 'vision' ? 'scene-active' : currentScene === 'welcome' ? 'scene-after' : 'scene-before'}`}>
+        <VisionScene />
+      </div>
+      
+      <div className={`scene-container ${currentScene === 'solutions' ? 'scene-active' : currentScene === 'vision' ? 'scene-after' : 'scene-before'}`}>
+        <SolutionsScene />
+      </div>
+      
+      <div className={`scene-container ${currentScene === 'creations' ? 'scene-active' : currentScene === 'solutions' ? 'scene-after' : 'scene-before'}`}>
+        <CreationsScene />
+      </div>
+      
+      <div className={`scene-container ${currentScene === 'contact' ? 'scene-active' : currentScene === 'creations' ? 'scene-after' : 'scene-before'}`}>
+        <ContactScene />
+      </div>
+      
+      <div className={`scene-container ${currentScene === 'dashboard' ? 'scene-active' : currentScene === 'contact' ? 'scene-after' : 'scene-before'}`}>
+        <DashboardScene />
+      </div>
+    </main>
   );
 };
 
