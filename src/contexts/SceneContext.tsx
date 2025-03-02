@@ -29,8 +29,8 @@ interface SceneProviderProps {
 
 export const SceneProvider = ({ children }: SceneProviderProps) => {
   const [currentScene, setCurrentScene] = useState<SceneType>('welcome');
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatPosition, setChatPosition] = useState<ChatPositionType>('center');
+  const [chatOpen, setChatOpen] = useState(true); // Set to true by default so it's always available
+  const [chatPosition, setChatPosition] = useState<ChatPositionType>('minimized'); // Start minimized
 
   const changeScene = (scene: SceneType) => {
     setCurrentScene(scene);
@@ -39,25 +39,14 @@ export const SceneProvider = ({ children }: SceneProviderProps) => {
     if (scene !== 'welcome' && chatOpen && chatPosition !== 'minimized') {
       setChatPosition('minimized');
     }
-    
-    // If returning to welcome page and chat is minimized but open, center it
-    if (scene === 'welcome' && chatOpen && chatPosition === 'minimized') {
-      setChatPosition('center');
-    }
   };
 
   const toggleChat = () => {
-    const newChatOpen = !chatOpen;
-    setChatOpen(newChatOpen);
-    
-    // If opening the chat, set it to center position regardless of page
-    // unless we're not on the welcome page, then it should be minimized
-    if (newChatOpen) {
-      if (currentScene === 'welcome') {
-        setChatPosition('center');
-      } else {
-        setChatPosition('minimized');
-      }
+    // Instead of toggling open/closed, we now toggle between minimized and center
+    if (chatPosition === 'minimized') {
+      setChatPosition('center');
+    } else {
+      setChatPosition('minimized');
     }
   };
 

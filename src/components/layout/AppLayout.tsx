@@ -4,11 +4,11 @@ import Navigation from './Navigation';
 import { useScene } from '@/contexts/SceneContext';
 import Chat from '../chat/Chat';
 import BackgroundEffects from '../effects/BackgroundEffects';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AppLayout = () => {
-  const { chatOpen, currentScene } = useScene();
-  const isMobile = useMobile();
+  const { currentScene } = useScene();
+  const isMobile = useIsMobile();
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -19,7 +19,7 @@ const AppLayout = () => {
         <div className={`${isMobile ? 'pt-20' : ''} h-full w-full`}>
           <Outlet />
         </div>
-        {chatOpen && <Chat />}
+        <Chat /> {/* Always render Chat component */}
       </div>
     </div>
   );

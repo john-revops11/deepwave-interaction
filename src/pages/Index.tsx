@@ -11,22 +11,14 @@ import ParticleBackground from '@/components/effects/ParticleBackground';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
-  const { currentScene, toggleChat, setChatPosition } = useScene();
-  const [showChat, setShowChat] = useState(false);
+  const { currentScene, setChatPosition } = useScene();
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Automatically show the chat after a short delay when the page loads
+    // Set initial chat position
     const timer = setTimeout(() => {
-      setShowChat(true);
-      toggleChat();
-      
-      // Set initial chat position to center if on welcome page, minimized otherwise
-      if (currentScene === 'welcome') {
-        setChatPosition(isMobile ? 'minimized' : 'center');
-      } else {
-        setChatPosition('minimized');
-      }
+      // Always start with chat minimized
+      setChatPosition('minimized');
     }, 800);
 
     return () => clearTimeout(timer);

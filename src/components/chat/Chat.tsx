@@ -166,11 +166,7 @@ const Chat = () => {
   };
 
   const toggleChatPosition = () => {
-    if (chatPosition === 'minimized') {
-      setChatPosition('center');
-    } else {
-      setChatPosition('minimized');
-    }
+    toggleChat();
   };
 
   const chatContainerClasses = () => {
@@ -341,7 +337,7 @@ const Chat = () => {
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={toggleChat}
+              onClick={toggleChatPosition}
               className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
             >
               <X className="h-4 w-4" />
