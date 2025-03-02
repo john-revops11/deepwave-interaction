@@ -30,7 +30,7 @@ const ProjectCard = ({ title, description, technologies, image, delay }: Project
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+      <div className="relative aspect-[16/9] overflow-hidden rounded-xl">
         <div 
           className="absolute inset-0 bg-gradient-to-b from-mariana-deep/0 to-mariana-deep z-10"
           style={{
@@ -48,11 +48,11 @@ const ProjectCard = ({ title, description, technologies, image, delay }: Project
           }}
         ></div>
         
-        <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-          <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+        <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+          <h3 className="text-xl font-semibold text-white mb-1">{title}</h3>
           
           <p 
-            className="text-white/80 text-sm mb-3 line-clamp-2 transition-all duration-500"
+            className="text-white/80 text-sm mb-2 line-clamp-2 transition-all duration-500"
             style={{
               maxHeight: isHovered ? '3rem' : '0',
               opacity: isHovered ? 1 : 0,
@@ -62,9 +62,9 @@ const ProjectCard = ({ title, description, technologies, image, delay }: Project
             {description}
           </p>
           
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             {technologies.map((tech, index) => (
-              <span key={index} className="text-xs px-2 py-1 rounded-full bg-mariana-accent/20 text-mariana-accent">
+              <span key={index} className="text-xs px-2 py-0.5 rounded-full bg-mariana-accent/20 text-mariana-accent">
                 {tech}
               </span>
             ))}
@@ -72,13 +72,13 @@ const ProjectCard = ({ title, description, technologies, image, delay }: Project
         </div>
         
         <div 
-          className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-white transition-all duration-300"
+          className="absolute top-2 right-2 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-white transition-all duration-300"
           style={{
             opacity: isHovered ? 1 : 0,
             transform: isHovered ? 'translateY(0)' : 'translateY(-10px)'
           }}
         >
-          <ExternalLink className="w-5 h-5" />
+          <ExternalLink className="w-4 h-4" />
         </div>
       </div>
     </div>
@@ -142,8 +142,8 @@ const CreationsScene = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 h-full flex flex-col justify-center">
-      <div className={`text-center mb-12 transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+    <div className="container mx-auto px-4 h-full flex flex-col pb-28">
+      <div className={`text-center mb-8 transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
         <div className="inline-block mb-4 px-4 py-1 rounded-full glass text-mariana-accent text-sm font-medium transition-all animate-pulse-glow">
           Our Creations
         </div>
