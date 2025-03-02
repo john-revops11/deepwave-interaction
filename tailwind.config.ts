@@ -124,6 +124,10 @@ export default {
           '50%': { transform: 'translateY(-25px) translateX(0)' },
           '75%': { transform: 'translateY(-15px) translateX(-15px)' },
           '100%': { transform: 'translateY(0) translateX(0)' }
+        },
+        'bounce': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-25%)' }
         }
       },
       animation: {
@@ -139,7 +143,8 @@ export default {
         'wave': 'wave 12s infinite linear',
         'typing': 'typing 3.5s steps(40, end)',
         'blink': 'blink 0.7s step-end infinite',
-        'particle-float': 'particle-float 8s infinite ease-in-out'
+        'particle-float': 'particle-float 8s infinite ease-in-out',
+        'bounce': 'bounce 0.8s infinite ease-in-out'
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

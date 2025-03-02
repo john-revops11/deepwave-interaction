@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { useScene, type SceneType } from '@/contexts/SceneContext';
 import { X, Send, Bot, User, Minimize } from 'lucide-react';
@@ -5,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import Message from './Message';
 import { sendMessageToOpenAI } from '@/services/chatService';
 import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ChatMessage {
   id: string;
@@ -27,11 +30,12 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   },
 ];
 
+// Enhanced quick prompts with more natural language and clear intent
 const QUICK_PROMPTS: { text: string; scene?: SceneType }[] = [
-  { text: "Tell me about Mariana Deep", scene: 'vision' },
-  { text: "What solutions do you offer?", scene: 'solutions' },
-  { text: "Show me your work", scene: 'creations' },
-  { text: "I'd like to contact you", scene: 'contact' },
+  { text: "What is Mariana Deep?", scene: 'vision' },
+  { text: "What solutions can you offer?", scene: 'solutions' },
+  { text: "Show me your portfolio", scene: 'creations' },
+  { text: "I'd like to connect", scene: 'contact' },
 ];
 
 const Chat = () => {
@@ -40,9 +44,11 @@ const Chat = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [conversationHistory, setConversationHistory] = useState<OpenAIMessage[]>([
     { role: 'assistant', content: INITIAL_MESSAGES[0].text }
   ]);
+  const [hovered, setHovered] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
@@ -55,6 +61,27 @@ const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Auto-focus input when chat is opened
+  useEffect(() => {
+    if (chatPosition !== 'minimized') {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
+  }, [chatPosition]);
+
+  // Add escape key handler to minimize chat
+  useEffect(() => {
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && chatPosition !== 'minimized') {
+        setChatPosition('minimized');
+      }
+    };
+
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [chatPosition, setChatPosition]);
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
@@ -112,7 +139,8 @@ const Chat = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
@@ -135,13 +163,13 @@ const Chat = () => {
   const chatContainerClasses = () => {
     switch (chatPosition) {
       case 'center':
-        return "fixed inset-0 m-auto w-[90%] max-w-4xl h-[70vh] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in z-50";
+        return "fixed inset-0 m-auto w-[90%] max-w-4xl h-[70vh] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in z-50 transition-all duration-300";
       case 'bottom-right':
-        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in";
+        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in transition-all duration-300";
       case 'minimized':
         return "fixed right-8 bottom-8 z-50 animate-scale-in";
       default:
-        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in";
+        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in transition-all duration-300";
     }
   };
 
@@ -149,19 +177,38 @@ const Chat = () => {
     return (
       <Button
         onClick={toggleChatPosition}
-        className="fixed right-8 bottom-8 z-50 w-14 h-14 rounded-full bg-mariana-accent text-mariana-deep shadow-lg hover:scale-105 transition-all duration-300"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className={`fixed right-8 bottom-8 z-50 w-14 h-14 rounded-full bg-mariana-accent text-mariana-deep shadow-lg transition-all duration-300 ${
+          hovered ? 'scale-110 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'opacity-90'
+        }`}
       >
-        <Bot className="w-6 h-6" />
+        <Bot className={`w-6 h-6 transition-transform duration-300 ${hovered ? 'scale-110' : ''}`} />
       </Button>
     );
   }
 
   return (
-    <div className={chatContainerClasses()}>
+    <div 
+      className={chatContainerClasses()}
+      onTouchStart={(e) => {
+        const touchStartY = e.touches[0].clientY;
+        
+        const handleTouchMove = (e: TouchEvent) => {
+          const touchMoveY = e.touches[0].clientY;
+          if (touchMoveY - touchStartY > 50) { // Swipe down threshold
+            setChatPosition('minimized');
+            document.removeEventListener('touchmove', handleTouchMove);
+          }
+        };
+        
+        document.addEventListener('touchmove', handleTouchMove, { once: true });
+      }}
+    >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between p-4 bg-mariana-light border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full">
+            <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full animate-pulse-glow">
               <Bot className="w-5 h-5 text-mariana-deep" />
             </div>
             <div>
@@ -174,7 +221,7 @@ const Chat = () => {
               variant="ghost" 
               size="icon" 
               onClick={toggleChatPosition}
-              className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+              className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
             >
               <Minimize className="h-4 w-4" />
             </Button>
@@ -182,7 +229,7 @@ const Chat = () => {
               variant="ghost" 
               size="icon" 
               onClick={toggleChat}
-              className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+              className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -194,15 +241,15 @@ const Chat = () => {
             <Message key={message.id} message={message} />
           ))}
           {isTyping && (
-            <div className="flex items-start gap-3 mb-4 animate-pulse">
+            <div className="flex items-start gap-3 mb-4">
               <div className="flex items-center justify-center w-8 h-8 bg-mariana-accent rounded-full">
                 <Bot className="w-5 h-5 text-mariana-deep" />
               </div>
               <div className="px-4 py-2 glass rounded-lg rounded-tl-none max-w-[80%]">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
-                  <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
-                  <div className="w-2 h-2 bg-mariana-accent rounded-full"></div>
+                  <div className="w-2 h-2 bg-mariana-accent rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-2 h-2 bg-mariana-accent rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                  <div className="w-2 h-2 bg-mariana-accent rounded-full animate-bounce"></div>
                 </div>
               </div>
             </div>
@@ -215,7 +262,7 @@ const Chat = () => {
             <button
               key={index}
               onClick={() => handleQuickPrompt(prompt)}
-              className="px-3 py-1 text-xs glass hover-glow rounded-full transition-all duration-300 text-mariana-accent"
+              className="px-3 py-1 text-xs glass hover-glow rounded-full transition-all duration-300 text-mariana-accent hover:text-white hover:bg-mariana-light/50"
             >
               {prompt.text}
             </button>
@@ -224,17 +271,18 @@ const Chat = () => {
         
         <div className="p-4 border-t border-white/10 bg-mariana-deep/80">
           <div className="flex gap-2">
-            <input
+            <Input
+              ref={inputRef}
               type="text"
               value={inputText}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder="Type a message..."
-              className="flex-1 bg-white/10 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-mariana-accent/50 text-white"
+              className="flex-1 bg-white/10 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-mariana-accent/50 text-white placeholder:text-white/50 transition-all duration-200"
             />
             <Button 
               onClick={handleSendMessage}
-              className="bg-mariana-accent hover:bg-mariana-accent/80 text-mariana-deep"
+              className="bg-mariana-accent hover:bg-mariana-accent/80 text-mariana-deep transition-all duration-200 hover:shadow-[0_0_10px_rgba(34,211,238,0.5)]"
             >
               <Send className="h-4 w-4" />
             </Button>
