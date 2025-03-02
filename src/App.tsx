@@ -8,6 +8,7 @@ import AppLayout from "./components/layout/AppLayout";
 import { SceneProvider } from "./contexts/SceneContext";
 import Index from "./pages/Index";
 import Contact from "./pages/Contact";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 // Service Detail Pages
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Index />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="dashboard" element={<Dashboard />} />
               
               {/* Service Detail Routes */}
               <Route path="services/ai-website" element={<AiWebsiteDetail />} />
