@@ -15,7 +15,7 @@ const AppLayout = () => {
       <div className="relative z-10 h-full w-full">
         <Navigation />
         <Outlet />
-        {chatOpen && <Chat />}
+        <Chat /> {/* Always render the Chat component */}
       </div>
     </div>
   );

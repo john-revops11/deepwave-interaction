@@ -9,15 +9,14 @@ import ContactScene from '@/components/scenes/ContactScene';
 import DashboardScene from '@/components/scenes/DashboardScene';
 
 const Index = () => {
-  const { currentScene, toggleChat } = useScene();
+  const { currentScene } = useScene();
   const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
-    // Automatically show the chat after a delay when the page loads
+    // Show chat interface after a brief delay
     const timer = setTimeout(() => {
       setShowChat(true);
-      toggleChat();
-    }, 2500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
