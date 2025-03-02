@@ -43,6 +43,7 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatRef = useRef<HTMLDivElement>(null);
   const [conversationHistory, setConversationHistory] = useState<OpenAIMessage[]>([
     { role: 'assistant', content: INITIAL_MESSAGES[0].text }
   ]);
@@ -68,6 +69,21 @@ const Chat = () => {
       }, 300);
     }
   }, [chatPosition]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (chatRef.current && 
+          !chatRef.current.contains(event.target as Node) && 
+          chatPosition !== 'minimized') {
+        setChatPosition('minimized');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [chatPosition, setChatPosition]);
 
   useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
@@ -215,6 +231,7 @@ const Chat = () => {
 
   return (
     <div 
+      ref={chatRef}
       className={chatContainerClasses()}
       onTouchStart={(e) => {
         const touchStartY = e.touches[0].clientY;
