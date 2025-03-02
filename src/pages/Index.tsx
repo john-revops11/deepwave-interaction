@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useScene } from '@/contexts/SceneContext';
 import WelcomeScene from '@/components/scenes/WelcomeScene';
 import VisionScene from '@/components/scenes/VisionScene';
@@ -10,16 +10,6 @@ import DashboardScene from '@/components/scenes/DashboardScene';
 
 const Index = () => {
   const { currentScene } = useScene();
-  const [showChat, setShowChat] = useState(false);
-
-  useEffect(() => {
-    // Show chat interface after a brief delay
-    const timer = setTimeout(() => {
-      setShowChat(true);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <main className="relative h-full w-full overflow-hidden">

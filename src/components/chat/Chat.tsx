@@ -124,28 +124,22 @@ const Chat = () => {
   };
 
   return (
-    <div className="fixed inset-0 pointer-events-none">
-      <div className="absolute w-full h-full flex items-center justify-center">
-        {/* Centered avatar that's always visible */}
-        <div 
-          className="w-12 h-12 rounded-full bg-mariana-accent flex items-center justify-center cursor-pointer pointer-events-auto z-50"
-          onClick={toggleExpanded}
-          style={{
-            opacity: expanded ? 0 : 1,
-            transition: 'opacity 0.3s ease',
-            transform: 'translateY(-300px)'
-          }}
-        >
-          <Bot className="w-6 h-6 text-mariana-deep" />
-        </div>
+    <div className="fixed bottom-4 right-4 z-50 pointer-events-auto">
+      {/* Minimized avatar that's visible when chat is collapsed */}
+      <div 
+        className={`w-12 h-12 rounded-full bg-mariana-accent flex items-center justify-center cursor-pointer 
+          transition-opacity duration-300 ${expanded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        onClick={toggleExpanded}
+      >
+        <Bot className="w-6 h-6 text-mariana-deep" />
       </div>
 
       {/* Chat Interface (expanded view) */}
       <div 
-        className={`absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 pointer-events-auto z-40
+        className={`transition-all duration-500 
           ${expanded ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'}`}
       >
-        <div className="w-[500px] h-[320px] glass-dark rounded-xl overflow-hidden shadow-2xl">
+        <div className="w-[350px] h-[450px] glass-dark rounded-xl overflow-hidden shadow-2xl">
           <div className="flex flex-col h-full relative">
             {/* Chat header */}
             <div className="flex items-center justify-between p-3 border-b border-white/10">
@@ -158,6 +152,20 @@ const Chat = () => {
                   <p className="text-xs text-mariana-accent">AI Concierge</p>
                 </div>
               </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10"
+                onClick={toggleExpanded}
+              >
+                <span className="sr-only">Minimize</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="4 14 10 14 10 20"></polyline>
+                  <polyline points="20 10 14 10 14 4"></polyline>
+                  <line x1="14" y1="10" x2="21" y2="3"></line>
+                  <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+              </Button>
             </div>
             
             {/* Messages area */}
