@@ -7,6 +7,7 @@ import SolutionsScene from '@/components/scenes/SolutionsScene';
 import CreationsScene from '@/components/scenes/CreationsScene';
 import ContactScene from '@/components/scenes/ContactScene';
 import DashboardScene from '@/components/scenes/DashboardScene';
+import ParticleBackground from '@/components/effects/ParticleBackground';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
@@ -33,6 +34,14 @@ const Index = () => {
 
   return (
     <main className="relative h-full w-full overflow-hidden">
+      {/* Modern Particle Background */}
+      <ParticleBackground 
+        particleCount={isMobile ? 40 : 80}
+        particleColor="#22D3EE"
+        connectParticles={true}
+        activeParticles={true}
+      />
+      
       <div className={`scene-container ${currentScene === 'welcome' ? 'scene-active' : currentScene === 'dashboard' ? 'scene-before' : 'scene-after'}`}>
         <WelcomeScene />
       </div>

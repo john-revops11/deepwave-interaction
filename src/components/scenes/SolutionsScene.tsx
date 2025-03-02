@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Lightbulb, Bot, BarChart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface SolutionCardProps {
   title: string;
@@ -8,9 +9,10 @@ interface SolutionCardProps {
   icon: JSX.Element;
   featureList: string[];
   delay: number;
+  id: string;
 }
 
-const SolutionCard = ({ title, description, icon, featureList, delay }: SolutionCardProps) => {
+const SolutionCard = ({ title, description, icon, featureList, delay, id }: SolutionCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -23,7 +25,8 @@ const SolutionCard = ({ title, description, icon, featureList, delay }: Solution
   }, [delay]);
 
   return (
-    <div 
+    <Link 
+      to={`/services/${id}`}
       className={`glass rounded-xl p-6 h-full transition-all duration-500 ${
         isHovered ? 'scale-[1.02] shadow-[0_0_20px_rgba(34,211,238,0.3)]' : ''
       } ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
@@ -49,7 +52,7 @@ const SolutionCard = ({ title, description, icon, featureList, delay }: Solution
           ))}
         </ul>
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -66,6 +69,7 @@ const SolutionsScene = () => {
 
   const solutions = [
     {
+      id: "ai-website",
       title: "AI Website Development",
       description: "We build intelligent websites that learn from user interactions and adapt to provide personalized experiences.",
       icon: <Lightbulb className="w-6 h-6" />,
@@ -78,6 +82,7 @@ const SolutionsScene = () => {
       delay: 0
     },
     {
+      id: "ai-agent",
       title: "AI Agent Automations",
       description: "Custom AI agents that automate customer interactions, support, and lead nurturing across your digital channels.",
       icon: <Bot className="w-6 h-6" />,
@@ -90,6 +95,7 @@ const SolutionsScene = () => {
       delay: 200
     },
     {
+      id: "auto-marketing",
       title: "Automated Marketing",
       description: "AI-powered marketing solutions that identify patterns, predict behaviors, and optimize campaigns in real-time.",
       icon: <BarChart className="w-6 h-6" />,
@@ -106,7 +112,7 @@ const SolutionsScene = () => {
   return (
     <div className="container mx-auto px-4 h-full flex flex-col justify-center">
       <div className={`text-center mb-12 transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-        <div className="inline-block mb-4 px-4 py-1 rounded-full glass text-mariana-accent text-sm font-medium transition-all animate-pulse-glow">
+        <div className="inline-flex items-center justify-center mb-4 px-4 py-1 rounded-full glass text-mariana-accent text-sm font-medium transition-all animate-pulse-glow shadow-[0_0_15px_rgba(34,211,238,0.3)]">
           Our Solutions
         </div>
         
@@ -130,6 +136,7 @@ const SolutionsScene = () => {
             icon={solution.icon}
             featureList={solution.featureList}
             delay={solution.delay}
+            id={solution.id}
           />
         ))}
       </div>

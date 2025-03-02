@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface ProjectCardProps {
   title: string;
@@ -8,9 +9,10 @@ interface ProjectCardProps {
   technologies: string[];
   image: string;
   delay: number;
+  id: string;
 }
 
-const ProjectCard = ({ title, description, technologies, image, delay }: ProjectCardProps) => {
+const ProjectCard = ({ title, description, technologies, image, delay, id }: ProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -23,7 +25,8 @@ const ProjectCard = ({ title, description, technologies, image, delay }: Project
   }, [delay]);
 
   return (
-    <div 
+    <Link 
+      to={`/portfolio/${id}`}
       className={`group relative overflow-hidden rounded-xl transition-all duration-500 ${
         loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
       }`}
@@ -81,7 +84,7 @@ const ProjectCard = ({ title, description, technologies, image, delay }: Project
           <ExternalLink className="w-4 h-4" />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -98,6 +101,7 @@ const CreationsScene = () => {
 
   const projects = [
     {
+      id: "nova-ai",
       title: "Nova AI Assistant",
       description: "An intelligent digital assistant that adapts to user behavior and preferences.",
       technologies: ["React", "TensorFlow.js", "WebGL"],
@@ -105,6 +109,7 @@ const CreationsScene = () => {
       delay: 0
     },
     {
+      id: "quantum-analytics",
       title: "Quantum Analytics Platform",
       description: "Real-time data visualization and AI-powered insights for enterprise decision-making.",
       technologies: ["Vue.js", "D3.js", "Python"],
@@ -112,6 +117,7 @@ const CreationsScene = () => {
       delay: 100
     },
     {
+      id: "lumina-ecommerce",
       title: "Lumina E-Commerce",
       description: "Next-generation shopping experience with AI-driven personalization and recommendations.",
       technologies: ["Next.js", "GraphQL", "ML"],
@@ -119,6 +125,7 @@ const CreationsScene = () => {
       delay: 200
     },
     {
+      id: "prism-crm",
       title: "Prism CRM",
       description: "Intelligent customer relationship management system with predictive analytics.",
       technologies: ["Angular", "Node.js", "MongoDB"],
@@ -126,6 +133,7 @@ const CreationsScene = () => {
       delay: 300
     },
     {
+      id: "echo-social",
       title: "Echo Social Platform",
       description: "AI-enhanced social network with advanced content curation and moderation.",
       technologies: ["React Native", "Firebase", "AI"],
@@ -133,6 +141,7 @@ const CreationsScene = () => {
       delay: 400
     },
     {
+      id: "pulse-health",
       title: "Pulse Health Tracker",
       description: "Personalized health monitoring platform with AI health insights and predictions.",
       technologies: ["Swift", "TensorFlow", "AWS"],
@@ -144,7 +153,7 @@ const CreationsScene = () => {
   return (
     <div className="container mx-auto px-4 h-full flex flex-col pb-28">
       <div className={`text-center mb-8 transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-        <div className="inline-block mb-4 px-4 py-1 rounded-full glass text-mariana-accent text-sm font-medium transition-all animate-pulse-glow">
+        <div className="inline-flex items-center justify-center mb-4 px-4 py-1 rounded-full glass text-mariana-accent text-sm font-medium transition-all animate-pulse-glow shadow-[0_0_15px_rgba(34,211,238,0.3)]">
           Our Creations
         </div>
         
@@ -168,6 +177,7 @@ const CreationsScene = () => {
             technologies={project.technologies}
             image={project.image}
             delay={project.delay}
+            id={project.id}
           />
         ))}
       </div>
