@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useScene, type SceneType } from '@/contexts/SceneContext';
-import { X, Send, Bot } from 'lucide-react';
+import { X, Send, Bot, User, Maximize, Minimize } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Message from './Message';
 
@@ -29,7 +29,7 @@ const QUICK_PROMPTS: { text: string; scene?: SceneType }[] = [
 ];
 
 const Chat = () => {
-  const { toggleChat, changeScene } = useScene();
+  const { toggleChat, changeScene, chatPosition, setChatPosition, currentScene } = useScene();
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -118,8 +118,42 @@ const Chat = () => {
     }, 100);
   };
 
+  const toggleChatPosition = () => {
+    if (chatPosition === 'minimized') {
+      setChatPosition(currentScene === 'welcome' ? 'center' : 'bottom-right');
+    } else {
+      setChatPosition('minimized');
+    }
+  };
+
+  // Determine the correct CSS classes based on chat position
+  const chatContainerClasses = () => {
+    switch (chatPosition) {
+      case 'center':
+        return "fixed inset-0 m-auto w-[90%] max-w-4xl h-[70vh] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in z-50";
+      case 'bottom-right':
+        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in";
+      case 'minimized':
+        return "fixed right-8 bottom-8 z-50 animate-scale-in";
+      default:
+        return "fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in";
+    }
+  };
+
+  // If minimized, just show the avatar button
+  if (chatPosition === 'minimized') {
+    return (
+      <Button
+        onClick={toggleChatPosition}
+        className="fixed right-8 bottom-8 z-50 w-14 h-14 rounded-full bg-mariana-accent text-mariana-deep shadow-lg hover:scale-105 transition-all duration-300"
+      >
+        <Bot className="w-6 h-6" />
+      </Button>
+    );
+  }
+
   return (
-    <div className="fixed right-8 bottom-8 z-50 w-[380px] h-[500px] glass-dark rounded-xl overflow-hidden shadow-2xl animate-scale-in">
+    <div className={chatContainerClasses()}>
       <div className="flex flex-col h-full">
         {/* Chat header */}
         <div className="flex items-center justify-between p-4 bg-mariana-light border-b border-white/10">
@@ -132,14 +166,24 @@ const Chat = () => {
               <p className="text-xs text-mariana-accent">AI Concierge</p>
             </div>
           </div>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={toggleChat}
-            className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleChatPosition}
+              className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+            >
+              <Minimize className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleChat}
+              className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         
         {/* Messages area */}

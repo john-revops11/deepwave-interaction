@@ -6,7 +6,7 @@ import Chat from '../chat/Chat';
 import BackgroundEffects from '../effects/BackgroundEffects';
 
 const AppLayout = () => {
-  const { chatOpen } = useScene();
+  const { chatOpen, currentScene } = useScene();
 
   return (
     <div className="relative h-full w-full overflow-hidden">

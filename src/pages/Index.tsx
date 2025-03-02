@@ -17,7 +17,7 @@ const Index = () => {
     const timer = setTimeout(() => {
       setShowChat(true);
       toggleChat();
-    }, 2500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
