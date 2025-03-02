@@ -34,16 +34,26 @@ export const SceneProvider = ({ children }: SceneProviderProps) => {
 
   const changeScene = (scene: SceneType) => {
     setCurrentScene(scene);
-    // Adjust chat position based on scene
-    if (scene === 'welcome') {
-      setChatPosition('center');
-    } else {
-      setChatPosition('bottom-right');
+    // Only adjust chat position if it's currently open and not minimized
+    if (chatOpen && chatPosition !== 'minimized') {
+      // Adjust chat position based on scene
+      if (scene === 'welcome') {
+        setChatPosition('center');
+      } else {
+        setChatPosition('bottom-right');
+      }
     }
   };
 
   const toggleChat = () => {
-    setChatOpen(prev => !prev);
+    const newChatOpen = !chatOpen;
+    setChatOpen(newChatOpen);
+    
+    // If opening the chat and it was previously minimized,
+    // set the appropriate position based on current scene
+    if (newChatOpen && chatPosition === 'minimized') {
+      setChatPosition(currentScene === 'welcome' ? 'center' : 'bottom-right');
+    }
   };
 
   return (

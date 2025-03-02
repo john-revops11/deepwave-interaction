@@ -1,13 +1,12 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useScene, type SceneType } from '@/contexts/SceneContext';
-import { X, Send, Bot, User, Minimize } from 'lucide-react';
+import { X, Send, Bot, User, Minimize, Maximize, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Message from './Message';
 import { sendMessageToOpenAI } from '@/services/chatService';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ChatMessage {
   id: string;
@@ -30,7 +29,6 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   },
 ];
 
-// Enhanced quick prompts with more natural language and clear intent
 const QUICK_PROMPTS: { text: string; scene?: SceneType }[] = [
   { text: "What is Mariana Deep?", scene: 'vision' },
   { text: "What solutions can you offer?", scene: 'solutions' },
@@ -49,7 +47,7 @@ const Chat = () => {
     { role: 'assistant', content: INITIAL_MESSAGES[0].text }
   ]);
   const [hovered, setHovered] = useState(false);
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
@@ -63,7 +61,6 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Auto-focus input when chat is opened
   useEffect(() => {
     if (chatPosition !== 'minimized') {
       setTimeout(() => {
@@ -72,7 +69,6 @@ const Chat = () => {
     }
   }, [chatPosition]);
 
-  // Add escape key handler to minimize chat
   useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && chatPosition !== 'minimized') {
@@ -181,16 +177,45 @@ const Chat = () => {
 
   if (chatPosition === 'minimized') {
     return (
-      <Button
-        onClick={toggleChatPosition}
+      <div
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`fixed ${isMobile ? 'right-4 bottom-6' : 'right-8 bottom-8'} z-50 w-14 h-14 rounded-full bg-mariana-accent text-mariana-deep shadow-lg transition-all duration-300 ${
-          hovered ? 'scale-110 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'opacity-90'
+        onClick={toggleChatPosition}
+        className={`fixed ${
+          isMobile 
+            ? 'left-[8.33%] right-[8.33%] bottom-6 w-5/6' 
+            : 'left-1/4 right-1/4 bottom-8 w-1/2'
+        } z-50 h-[10vh] min-h-[60px] glass-dark rounded-xl overflow-hidden shadow-lg transition-all duration-300 cursor-pointer ${
+          hovered ? 'shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'opacity-90'
         }`}
       >
-        <Bot className={`w-6 h-6 transition-transform duration-300 ${hovered ? 'scale-110' : ''}`} />
-      </Button>
+        <div className="flex items-center justify-between h-full px-6">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 bg-mariana-accent rounded-full">
+              <Bot className="w-6 h-6 text-mariana-deep" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white">Mariana AI</h3>
+              <p className="text-xs text-mariana-accent">AI Concierge</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <p className="hidden md:block text-white/80 text-sm">Click to chat with Mariana</p>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="h-10 w-10 text-mariana-accent hover:text-white hover:bg-white/10 transition-colors duration-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleChatPosition();
+              }}
+            >
+              <Maximize className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
     );
   }
 
