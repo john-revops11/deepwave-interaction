@@ -9,6 +9,8 @@ import { SceneProvider } from "./contexts/SceneContext";
 import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
+import Services from "./pages/Services";
+import Products from "./pages/Products";
 import NotFound from "./pages/NotFound";
 
 // Service Detail Pages
@@ -35,6 +37,8 @@ const App = () => (
               <Route index element={<Index />} />
               <Route path="contact" element={<Contact />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="services" element={<Services />} />
+              <Route path="products" element={<Products />} />
               
               {/* Service Detail Routes */}
               <Route path="services/ai-website" element={<AiWebsiteDetail />} />

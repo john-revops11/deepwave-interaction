@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useScene, type SceneType } from '@/contexts/SceneContext';
-import { MessageSquare, Home, Eye, Lightbulb, Layers, Phone, User, Menu, X } from 'lucide-react';
+import { MessageSquare, Home, Eye, Lightbulb, Layers, Phone, User, Menu, X, MousePointerClick, Sparkles } from 'lucide-react';
 import { useMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
@@ -66,6 +66,23 @@ const Navigation = () => {
     },
   ];
 
+  // Add new main menu items
+  const mainMenuItems = [
+    {
+      label: 'Services',
+      icon: <MousePointerClick className="w-5 h-5" />,
+      path: '/services'
+    },
+    {
+      label: 'Products',
+      icon: <Sparkles className="w-5 h-5" />,
+      path: '/products'
+    }
+  ];
+
+  // Combine all navigation items
+  const allNavItems = [...navItems, ...mainMenuItems];
+
   // Mobile menu toggle
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -110,6 +127,8 @@ const Navigation = () => {
         {mobileMenuOpen && (
           <div className="glass-dark w-full shadow-lg animate-fade-in">
             <div className="py-2">
+              {/* Home section */}
+              <div className="px-4 pt-2 pb-1 text-white/50 text-xs font-medium">Home</div>
               {navItems.map((item) => (
                 <Link 
                   key={item.id} 
@@ -127,6 +146,35 @@ const Navigation = () => {
                     <div className="flex items-center gap-3">
                       <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
                         currentScene === item.id 
+                          ? 'bg-mariana-accent/20' 
+                          : 'bg-transparent'
+                      }`}>
+                        {item.icon}
+                      </div>
+                      <span>{item.label}</span>
+                    </div>
+                  </Button>
+                </Link>
+              ))}
+
+              {/* Main menu items */}
+              <div className="px-4 pt-2 pb-1 text-white/50 text-xs font-medium">Main Menu</div>
+              {mainMenuItems.map((item, index) => (
+                <Link 
+                  key={index} 
+                  to={item.path}
+                >
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start px-4 py-2 ${
+                      location.pathname === item.path 
+                        ? 'text-mariana-accent' 
+                        : 'text-white/70 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                        location.pathname === item.path 
                           ? 'bg-mariana-accent/20' 
                           : 'bg-transparent'
                       }`}>
@@ -179,6 +227,7 @@ const Navigation = () => {
     <div className={`fixed z-50 top-8 right-8 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-[-20px]'}`}>
       <div className="glass rounded-full p-2 shadow-lg animate-pulse-glow">
         <div className="flex items-center space-x-4">
+          {/* Original navigation items */}
           {navItems.map((item) => (
             <Link
               key={item.id}
@@ -197,6 +246,26 @@ const Navigation = () => {
               </button>
             </Link>
           ))}
+
+          {/* New main menu items */}
+          {mainMenuItems.map((item, index) => (
+            <Link
+              key={index}
+              to={item.path}
+            >
+              <button
+                className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 ${
+                  location.pathname === item.path 
+                    ? 'bg-mariana-accent text-mariana-deep shadow-[0_0_10px_rgba(34,211,238,0.7)]' 
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                }`}
+                aria-label={item.label}
+              >
+                {item.icon}
+              </button>
+            </Link>
+          ))}
+
           <button
             onClick={toggleChat}
             className="flex items-center justify-center w-10 h-10 rounded-full bg-mariana-accent text-mariana-deep shadow-[0_0_10px_rgba(34,211,238,0.7)] ml-2"
