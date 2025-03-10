@@ -6,6 +6,9 @@ export type SceneType = 'welcome' | 'vision' | 'solutions' | 'creations' | 'cont
 interface SceneContextType {
   currentScene: SceneType;
   changeScene: (scene: SceneType) => void;
+  chatPosition: 'open' | 'minimized';
+  setChatPosition: (position: 'open' | 'minimized') => void;
+  toggleChat: () => void;
 }
 
 const SceneContext = createContext<SceneContextType | undefined>(undefined);
@@ -24,16 +27,24 @@ interface SceneProviderProps {
 
 export const SceneProvider = ({ children }: SceneProviderProps) => {
   const [currentScene, setCurrentScene] = useState<SceneType>('welcome');
+  const [chatPosition, setChatPosition] = useState<'open' | 'minimized'>('minimized');
 
   const changeScene = (scene: SceneType) => {
     setCurrentScene(scene);
+  };
+
+  const toggleChat = () => {
+    setChatPosition(prev => prev === 'open' ? 'minimized' : 'open');
   };
 
   return (
     <SceneContext.Provider 
       value={{ 
         currentScene, 
-        changeScene
+        changeScene,
+        chatPosition,
+        setChatPosition,
+        toggleChat
       }}
     >
       {children}

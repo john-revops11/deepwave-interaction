@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import WelcomeScene from '@/components/scenes/WelcomeScene';
 import VisionScene from '@/components/scenes/VisionScene';
