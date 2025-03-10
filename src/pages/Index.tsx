@@ -7,7 +7,7 @@ import CreationsScene from '@/components/scenes/CreationsScene';
 import ContactScene from '@/components/scenes/ContactScene';
 import DashboardScene from '@/components/scenes/DashboardScene';
 import ParticleBackground from '@/components/effects/ParticleBackground';
-import DeepSeaCreature from '@/components/effects/DeepSeaCreature';
+import TechJellyfish from '@/components/effects/TechJellyfish';
 import { useScene } from '@/contexts/SceneContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -25,8 +25,8 @@ const Index = () => {
         activeParticles={true}
       />
       
-      {/* Deep Sea Creature Animation */}
-      <DeepSeaCreature />
+      {/* Tech Jellyfish Animation */}
+      <TechJellyfish />
       
       <div className={`scene-container ${currentScene === 'welcome' ? 'scene-active' : currentScene === 'dashboard' ? 'scene-before' : 'scene-after'}`}>
         <WelcomeScene />
