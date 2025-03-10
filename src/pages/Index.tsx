@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useScene } from '@/contexts/SceneContext';
+import { useEffect } from 'react';
 import WelcomeScene from '@/components/scenes/WelcomeScene';
 import VisionScene from '@/components/scenes/VisionScene';
 import SolutionsScene from '@/components/scenes/SolutionsScene';
@@ -7,26 +6,13 @@ import CreationsScene from '@/components/scenes/CreationsScene';
 import ContactScene from '@/components/scenes/ContactScene';
 import DashboardScene from '@/components/scenes/DashboardScene';
 import ParticleBackground from '@/components/effects/ParticleBackground';
+import DeepSeaCreature from '@/components/effects/DeepSeaCreature';
+import { useScene } from '@/contexts/SceneContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
-  const { currentScene, setChatPosition } = useScene();
+  const { currentScene } = useScene();
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    // Set initial chat position
-    const timer = setTimeout(() => {
-      // On welcome scene, open the chat in center position
-      if (currentScene === 'welcome') {
-        setChatPosition('center');
-      } else {
-        // On other scenes, keep it minimized
-        setChatPosition('minimized');
-      }
-    }, 800);
-
-    return () => clearTimeout(timer);
-  }, [currentScene]);
 
   return (
     <main className="relative h-full w-full overflow-hidden">
@@ -37,6 +23,9 @@ const Index = () => {
         connectParticles={true}
         activeParticles={true}
       />
+      
+      {/* Deep Sea Creature Animation */}
+      <DeepSeaCreature />
       
       <div className={`scene-container ${currentScene === 'welcome' ? 'scene-active' : currentScene === 'dashboard' ? 'scene-before' : 'scene-after'}`}>
         <WelcomeScene />
