@@ -21,7 +21,7 @@ const TechJellyfish = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Three jellyfish with different properties
+    // Four jellyfish with different properties (added one at top)
     const jellyfishes = [
       {
         x: canvas.width * 0.15,
@@ -49,6 +49,16 @@ const TechJellyfish = () => {
         color: 'rgba(134, 239, 172, 0.7)',
         tentacleLength: isMobile ? 18 : 30,
         tentacleCount: 7,
+      },
+      // New jellyfish at the top
+      {
+        x: canvas.width * 0.4,
+        y: canvas.height * 0.15,
+        size: isMobile ? 14 : 22,
+        speed: 0.6,
+        color: 'rgba(139, 92, 246, 0.7)', // Purple color
+        tentacleLength: isMobile ? 14 : 22,
+        tentacleCount: 5,
       }
     ];
 
