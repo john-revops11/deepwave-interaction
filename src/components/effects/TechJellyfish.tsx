@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -21,7 +20,7 @@ const TechJellyfish = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Four jellyfish with different properties (added one at top)
+    // Four jellyfish with different properties
     const jellyfishes = [
       {
         x: canvas.width * 0.15,
@@ -31,6 +30,9 @@ const TechJellyfish = () => {
         color: 'rgba(34, 211, 238, 0.8)',
         tentacleLength: isMobile ? 15 : 25,
         tentacleCount: 6,
+        directionX: Math.random() * 2 - 1,
+        directionY: Math.random() * 2 - 1,
+        movementSpeed: 0.3 + Math.random() * 0.3,
       },
       {
         x: canvas.width * 0.8,
@@ -40,6 +42,9 @@ const TechJellyfish = () => {
         color: 'rgba(94, 234, 212, 0.7)',
         tentacleLength: isMobile ? 12 : 20,
         tentacleCount: 5,
+        directionX: Math.random() * 2 - 1,
+        directionY: Math.random() * 2 - 1,
+        movementSpeed: 0.2 + Math.random() * 0.4,
       },
       {
         x: canvas.width * 0.6,
@@ -49,16 +54,21 @@ const TechJellyfish = () => {
         color: 'rgba(134, 239, 172, 0.7)',
         tentacleLength: isMobile ? 18 : 30,
         tentacleCount: 7,
+        directionX: Math.random() * 2 - 1,
+        directionY: Math.random() * 2 - 1,
+        movementSpeed: 0.15 + Math.random() * 0.25,
       },
-      // New jellyfish at the top
       {
         x: canvas.width * 0.4,
         y: canvas.height * 0.15,
         size: isMobile ? 14 : 22,
         speed: 0.6,
-        color: 'rgba(139, 92, 246, 0.7)', // Purple color
+        color: 'rgba(139, 92, 246, 0.7)',
         tentacleLength: isMobile ? 14 : 22,
         tentacleCount: 5,
+        directionX: Math.random() * 2 - 1,
+        directionY: Math.random() * 2 - 1,
+        movementSpeed: 0.25 + Math.random() * 0.35,
       }
     ];
 
@@ -144,18 +154,64 @@ const TechJellyfish = () => {
       ctx.restore();
     };
 
+    // Function to update jellyfish position and handle edge transitions
+    const updateJellyfishPosition = (jelly: any) => {
+      // Update position based on direction and speed
+      jelly.x += jelly.directionX * jelly.movementSpeed;
+      jelly.y += jelly.directionY * jelly.movementSpeed;
+      
+      // Handle screen edges - wrap around with random new direction
+      const buffer = jelly.size * 2; // Buffer to ensure full exit before reappearing
+      
+      if (jelly.x < -buffer) {
+        jelly.x = canvas.width + buffer;
+        jelly.directionX = -Math.random() * 0.5 - 0.5; // Moving left
+        jelly.directionY = Math.random() * 2 - 1; // Random vertical direction
+      } else if (jelly.x > canvas.width + buffer) {
+        jelly.x = -buffer;
+        jelly.directionX = Math.random() * 0.5 + 0.5; // Moving right
+        jelly.directionY = Math.random() * 2 - 1; // Random vertical direction
+      }
+      
+      if (jelly.y < -buffer) {
+        jelly.y = canvas.height + buffer;
+        jelly.directionY = -Math.random() * 0.5 - 0.5; // Moving up
+        jelly.directionX = Math.random() * 2 - 1; // Random horizontal direction
+      } else if (jelly.y > canvas.height + buffer) {
+        jelly.y = -buffer;
+        jelly.directionY = Math.random() * 0.5 + 0.5; // Moving down
+        jelly.directionX = Math.random() * 2 - 1; // Random horizontal direction
+      }
+      
+      // Occasionally change direction slightly for more natural movement
+      if (Math.random() < 0.01) {
+        jelly.directionX += (Math.random() * 0.2 - 0.1);
+        jelly.directionY += (Math.random() * 0.2 - 0.1);
+        
+        // Normalize direction vector to keep consistent speed
+        const magnitude = Math.sqrt(jelly.directionX * jelly.directionX + jelly.directionY * jelly.directionY);
+        if (magnitude > 0) {
+          jelly.directionX /= magnitude;
+          jelly.directionY /= magnitude;
+        }
+      }
+    };
+
     // Animation loop
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Update and draw each jellyfish
       for (const jelly of jellyfishes) {
+        // Update position with movement
+        updateJellyfishPosition(jelly);
+        
         // Make them float slightly up and down
-        jelly.y += Math.sin(time * jelly.speed) * 0.5;
+        const floatOffset = Math.sin(time * jelly.speed) * 0.5;
         
         drawTechJellyfish(
           jelly.x, 
-          jelly.y, 
+          jelly.y + floatOffset, 
           jelly.size, 
           time, 
           jelly.color,
